@@ -36,8 +36,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 // Routes
-app.use("api", AuthRoute);
-app.use("api", OrganizationRoute);
+app.use("/api", AuthRoute);
+app.use("/api", OrganizationRoute);
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
