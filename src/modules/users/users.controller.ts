@@ -60,11 +60,6 @@ export const addUser = (req: Request, res: Response, next: NextFunction) => {
       }
     );
   });
-
-  //   pool.query(queries.getUsers, (error: any, results: any) => {
-  //     if (error) throw error;
-
-  //   })
 };
 
 // export const signUp = async (
