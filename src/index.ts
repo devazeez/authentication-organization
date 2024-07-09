@@ -8,7 +8,7 @@ import { AuthRoute, OrganizationRoute } from "./modules";
 
 
 
-const app = express();
+export const app = express();
 const PORT = process.env.PORT || 3000;
 
 

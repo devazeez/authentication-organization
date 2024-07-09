@@ -27,4 +27,4 @@ module.exports = {
   // You can add other environments here (e.g., test, production)-
 };
 
-module.exports = pool;
+module.exports = pool; // Export the 'pool' object to make db.ts a valid module

@@ -1,1 +1,1 @@
-// export * from './database'; // Check if the path to 'database' is correct
+// export * from './database/db'; // Check if the path to 'database' is correct
