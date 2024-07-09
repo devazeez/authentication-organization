@@ -11,9 +11,9 @@ const router = express.Router();
 
 router.use(authenticate);
 
-router.post("/organizations", createOrg);
-router.get("/organizations", getUserOrganizations);
-router.get("/organizations/:orgId", getOrganizationById);
-router.post("/organizations/:orgId/users", addUserToOrganization)
+router.post("/organisations", createOrg);
+router.get("/organisations", getUserOrganizations);
+router.get("/organisations/:orgId", getOrganizationById);
+router.post("/organisations/:orgId/users", addUserToOrganization)
 
 export { router as OrganizationRoute };

@@ -19,13 +19,13 @@ export const createOrg = async (
 
     return res.status(201).json({
       status: "success",
-      message: "Organization created successful",
+      message: "Organisation created successful",
       data: newOrg,
     });
   } catch (error: any) {
     console.error("Error in creating organization:", error);
     return res.status(500).json({
-      message: "An error occurred organization creation",
+      message: "An error occurred organisation creation",
       error: error.message,
     });
   }
@@ -52,9 +52,9 @@ export const getUserOrganizations = async (
       })) as any;
       console.log(results);
       return res.status(200).json({
-        message: "User's organizations returned successfully",
+        message: "User's organisations returned successfully",
         data: {
-          organizations: results.rows.map((row: any) => ({
+          organisations: results.rows.map((row: any) => ({
             orgId: row.organization_id,
             name: row.name,
             description: row.description,
@@ -93,7 +93,7 @@ export const getOrganizationById = async (
     if (userOrganizations.rows.length === 0) {
       return res.status(404).json({
         status: "Not Found",
-        message: "Organization not found",
+        message: "Organisation not found",
         statusCode: 404,
       });
     }
@@ -113,7 +113,7 @@ export const getOrganizationById = async (
 
     return res.status(200).json({
       status: "success",
-      message: "Organization fetched successfully",
+      message: "Organisation fetched successfully",
       data: {
         orgId: organizationId,
         name: organizationDetails.rows[0].name,
@@ -148,7 +148,7 @@ export const addUserToOrganization = async (
       return res
         .status(404)
         .json({
-          message: "Organization not found or you don't have access to it",
+          message: "Organisation not found or you don't have access to it",
         });
     }
 
@@ -167,7 +167,7 @@ export const addUserToOrganization = async (
       return res
         .status(400)
         .json({
-          message: "This user is already a member of this organization",
+          message: "This user is already a member of this organisation",
         });
     }
 
@@ -177,7 +177,7 @@ export const addUserToOrganization = async (
       .status(200)
       .json({
         status: "success",
-        message: "User added to organization successfully",
+        message: "User added to organisation successfully",
         // data: organizationResult.rows[0],
       });
   } catch (error) {
@@ -185,7 +185,7 @@ export const addUserToOrganization = async (
     return res
       .status(500)
       .json({
-        message: "An error occurred while adding the user to the organization.",
+        message: "An error occurred while adding the user to the organisation.",
         error: error,
       });
   }

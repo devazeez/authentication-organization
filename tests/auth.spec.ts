@@ -1,10 +1,31 @@
 const dotenv = require("dotenv").config();
+const pool = require("../src/common/database/db");
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
 import request from "supertest";
 import { app } from "../src/index";
-const pool = require("../src/common/database/db");
+import jwt from "jsonwebtoken";
+import { generateToken } from "../src/utility/passwordUtility";
 
 const random = Math.floor(Math.random() * 1000) + 1;
+
+// UNIT TESTS
+// describe("Token Generation", () => {
+//   it("Should generate a token with correct expiration", () => {
+//     const user = {
+//       userId: "user-id",
+//       email: "user@example.com",
+//       password: "Password12@@",
+//     };
+//     const token = generateToken(user);
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET!, {
+//       algorithms: ["HS256"],
+//     }); // Added { algorithms: ['HS256'] } to specify the algorithm used for verification
+
+//     expect(decoded).toHaveProperty("id", "user-id");
+//     expect(decoded).toHaveProperty("email", "user@example.com");
+//     expect(decoded).toHaveProperty("exp");
+//   });
+// });
 
 describe("Auth Endpoints", () => {
   beforeAll(async () => {
