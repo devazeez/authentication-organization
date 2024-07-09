@@ -1,13 +1,13 @@
 import express, { Request, Response, NextFunction } from "express";
 import { getUsers, getUsersById, addUser, signUp, userLogin } from "./users.controller";
-import { userValidationRules, validate } from '../../middlewares';
+import { userValidationRules, validate, authenticate } from '../../middlewares';
 
 const router = express.Router();
 
-// router.use(authorize, authenticate);
+// router.use(authenticate);
 
 router.get("/users", getUsers);
-router.get("/users/:id", getUsersById);
+router.get("/users/:id", authenticate, getUsersById);
 router.post("/users", addUser);
 router.post("/auth/register", userValidationRules(), validate, signUp);
 router.post("/auth/login", userLogin);

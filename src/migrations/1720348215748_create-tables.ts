@@ -46,7 +46,7 @@ export async function up(pgm: MigrationBuilder): Promise<void> {
   });
 
   // Create the organization table
-  pgm.createTable('organization', {
+  pgm.createTable('organizations', {
     organization_id: {
       type: 'uuid',
       primaryKey: true,

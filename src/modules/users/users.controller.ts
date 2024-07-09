@@ -29,14 +29,41 @@ export const getUsersById = (
   res: Response,
   next: NextFunction
 ) => {
-  const id = parseInt(req.params.id);
-  pool.query(queries.getUserById, [id], (error: any, results: any) => {
-    if (error) throw error;
-    return res.status(200).json({
-      message: "User returned successfully",
-      data: results.rows,
+  const { id } = req.params;
+  const { userId } = req.user;
+  console.log(id, userId);
+  try {
+    if (!id) {
+      return res.status(400).json({
+        message: "Pass in a valid id",
+      });
+    }
+    pool.query(
+      queries.getUserById,
+      [id, userId],
+      (error: any, results: any) => {
+        if (error) throw error;
+        console.log(results.rows);
+        const { date_created, date_deleted, password, salt, ...restOfData } =
+          results.rows[0];
+        return res.status(200).json({
+          message: "User returned successfully",
+          data: {
+            userId: restOfData.user_id,
+            firstName: restOfData.first_name,
+            lastName: restOfData.last_name,
+            email: restOfData.email,
+            phone: restOfData.phone,
+          },
+        });
+      }
+    );
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Unable to get user by Id",
     });
-  });
+  }
 };
 
 export const addUser = (req: Request, res: Response, next: NextFunction) => {
