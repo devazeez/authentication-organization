@@ -5,6 +5,7 @@ import cors from "cors";
 // import winston from "winston";
 import expressWinston from "express-winston";
 import { AuthRoute, OrganizationRoute } from "./modules";
+import serverless from 'serverless-http'; // Import serverless at the top of the file
 
 
 
@@ -43,3 +44,5 @@ app.use("/api", OrganizationRoute);
     console.log(`Server is running on port ${PORT}`);
   });
 // })
+
+export default serverless(app);
