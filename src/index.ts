@@ -1,4 +1,4 @@
-import 'dotenv/config'; // This should be at the very top of your main file
+import 'dotenv/config';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
@@ -43,5 +43,4 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
-// Export the app wrapped in serverless
 export const handler = serverless(app);
