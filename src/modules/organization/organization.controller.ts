@@ -129,117 +129,36 @@ export const getOrganizationById = async (
   }
 };
 
-// export const adduserToOrganization = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   const loggedInUserId = req.user.userId;
-//   const { orgId } = req.params;
-//   const { userId } = req.body;
-//   console.log(userId);
-
-//   try {
-//     const userOrganizations = await new Promise<any>((resolve, reject) => {
-//       pool.query(
-//         queries.getOrganizationById,
-//         [orgId, loggedInUserId],
-//         (error: any, result: any) => {
-//           if (error) reject(error);
-//           else resolve(result);
-//         }
-//       );
-//     });
-
-//     if (userOrganizations.rows.length !== 0) {
-//       const userExists = await new Promise<any>((resolve, reject) => {
-//         pool.query(queries.getUserById, [userId], (error: any, result: any) => {
-//           if (error) reject(error);
-//           else resolve(result);
-//         });
-//       });
-
-//       if (userExists.rows.length == 0) {
-//         return res.status(400).json({
-//           message: "This user does not exists",
-//         });
-//       }
-//       await orgService.addUserToOrganization(orgId, userId);
-
-//       return res.status(200).json({
-//         status: "success",
-//         message: "User added to organisation successfully",
-//         data: userOrganizations.rows,
-//       });
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({
-//       error,
-//     });
-//   }
-// };
-
-export const addUserToOrganization = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const addUserToOrganization = async (req: Request, res: Response, next: NextFunction) => {
   const loggedInUserId = req.user.userId;
   const { orgId } = req.params;
   const { userId } = req.body;
 
   try {
-    console.log(userId, orgId);
-    // Check if the organization exists and the logged-in user has access to it
-    const organizationResult = await queryDatabase(
-      queries.getOrganizationById,
-      [orgId, loggedInUserId]
-    );
-    console.log("ORG RESULT", organizationResult);
-
+    const organizationResult = await queryDatabase(queries.getOrganizationById, [orgId, loggedInUserId]);
 
     if (organizationResult.rows.length === 0) {
-      return res.status(404).json({
-        message: "Organization not found or you don't have access to it",
-      });
+      return res.status(404).json({ message: "Organization not found or you don't have access to it" });
     }
 
-    // Check if the user to be added exists
     const userResult = await queryDatabase(queries.getUserById, [userId]);
-    console.log(userResult);
+
     if (userResult.rows.length === 0) {
-      return res.status(400).json({
-        message: "This user does not exist",
-      });
+      return res.status(400).json({ message: "This user does not exist" });
     }
 
-    // Check if the user is already a member of the organization
-    const userInOrgResult = await queryDatabase(
-      queries.checkUserInOrganization,
-      [orgId, userId]
-    );
+    const userInOrgResult = await queryDatabase(queries.checkUserInOrganization, [orgId, userId]);
 
     if (userInOrgResult.rows.length > 0) {
-      return res.status(400).json({
-        message: "This user is already a member of this organization",
-      });
+      return res.status(400).json({ message: "This user is already a member of this organization" });
     }
 
-    // Add the user to the organization
     await orgService.addUserToOrganization(orgId, userId);
 
-    return res.status(200).json({
-      status: "success",
-      message: "User added to organization successfully",
-      data: organizationResult.rows[0],
-    });
+    return res.status(200).json({ status: "success", message: "User added to organization successfully", data: organizationResult.rows[0] });
   } catch (error) {
     console.error("Error adding user to organization:", error);
-    return res.status(500).json({
-      message: "An error occurred while adding the user to the organization.",
-      error: error,
-    });
+    return res.status(500).json({ message: "An error occurred while adding the user to the organization.", error: error });
   }
 };
 

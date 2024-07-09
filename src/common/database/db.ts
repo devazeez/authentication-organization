@@ -3,11 +3,6 @@ const { Pool } = require("pg");
 // import { createClient } from '@supabase/supabase-js';
 require('dotenv').config();
 
-// const supabaseUrl = process.env.SUPABASE_URL!;
-// const supabaseKey = process.env.SUPABASE_KEY!;
-
-// export const supabase = createClient(supabaseUrl, supabaseKey);
-
 
 const pool = new Pool({
   user: process.env.DB_USER,
@@ -29,7 +24,7 @@ module.exports = {
     database: process.env.DB_NAME,
     port: parseInt(process.env.DB_PORT || "5432"),
   },
-  // You can add other environments here (e.g., test, production)
+  // You can add other environments here (e.g., test, production)-
 };
 
 module.exports = pool;

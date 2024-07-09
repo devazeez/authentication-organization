@@ -1,7 +1,7 @@
 export const getOrganizations =
   "SELECT * FROM organizations WHERE user_id = $1";
 
-// export const getOrganizationById = 'SELECT * FROM organizations WHERE organization_id = $1 AND user_id = $2 RETURNING organization_id, name, description'
+export const getOrganizationById = 'SELECT * FROM user_organizations WHERE organization_id = $1 AND user_id = $2'
 // export const getOrganizationById =
 //   "SELECT * FROM user_organizations WHERE organization_id = $1 AND user_id = $2";
 
