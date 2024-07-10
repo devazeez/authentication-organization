@@ -5,7 +5,7 @@ import cors from "cors";
 import winston from "winston";
 import expressWinston from "express-winston";
 import { AuthRoute, OrganizationRoute } from "./modules";
-import serverless from "serverless-http";
+// import serverless from "serverless-http";
 
 export const app = express();
 const PORT = process.env.PORT || 3000;

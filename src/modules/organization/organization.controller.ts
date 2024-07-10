@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction, response } from "express";
 import { CreateOrgInput } from "./organization.dto";
 import { OrganizationService } from "./organization.service";
-import { validate as uuidValidate } from "uuid";
+// import { validate as uuidValidate } from "uuid";
 const pool = require("../../common/database/db");
 const queries = require("./organization.queries");
 const orgService = new OrganizationService();
@@ -161,18 +161,18 @@ export const addUserToOrganization = async (
         ],
       });
     }
-    console.log("OrgId", uuidValidate(orgId));
-    // Convert orgId to a number before checking
-    if (uuidValidate(orgId) === false) {
-      return res.status(400).json({
-        errors: [
-          {
-            field: "orgId",
-            message: "Org id must be valid and provided",
-          },
-        ],
-      });
-    }
+    // console.log("OrgId", uuidValidate(orgId));
+    // // Convert orgId to a number before checking
+    // if (uuidValidate(orgId) === false) {
+    //   return res.status(400).json({
+    //     errors: [
+    //       {
+    //         field: "orgId",
+    //         message: "Org id must be valid and provided",
+    //       },
+    //     ],
+    //   });
+    // }
     const organizationResult = await queryDatabase(
       queries.getOrganizationById,
       [orgId, loggedInUserId]
