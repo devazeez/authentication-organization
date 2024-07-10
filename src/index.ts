@@ -38,9 +38,17 @@ app.use("/api", OrganizationRoute);
 
 // Only start the server if not in a serverless environment
 // if (process.env.NODE_ENV !== "production") {
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+const server = () => {
+  try {
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error(error);
+    console.log(error);
+  }
+};
+
 // }
 
 // Export the app wrapped in serverless
