@@ -49,6 +49,8 @@ const server = () => {
   }
 };
 
+server()
+
 // }
 
 // Export the app wrapped in serverless
