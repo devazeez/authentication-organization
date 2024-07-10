@@ -8,16 +8,16 @@ const router = express.Router();
 
 router.get("/users", getUsers);
 router.get("/users/:id", authenticate, getUsersById);
-router.post("/users", addUser);
+// router.post("/users", addUser);
 router.post("/auth/register", userValidationRules(), validate, signUp);
 router.post("/auth/login", userLogin);
 
 
 
-// router.get ("/", (req, res) =>{
-//     return res.status(200).json({
-//         message:"Testing this route"
-//     })
-// })
+router.get ("/" || '/api', (req, res) =>{
+    return res.status(200).json({
+        message:"Server is active like mad!!!"
+    })
+})
 
 export { router as AuthRoute };

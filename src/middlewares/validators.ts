@@ -7,16 +7,16 @@ const userValidationRules = () => {
     body("firstName").isString().withMessage("First name must be a string"),
     body("lastName").isString().withMessage("Last name must be a string"),
     body("email").isEmail().withMessage("Email must be valid"),
-    body("phone").isString().withMessage("phone number must be a string"),
+    // body("phone").isString().withMessage("phone number must be a string"),
     body("password")
-      .isLength({ min: 6 })
-      .withMessage("Password must be at least 6 characters long"),
+      .isLength({ min: 4 })
+      .withMessage("Password must be at least 4 characters long"),
     // body('phone').optional().isString().withMessage('Phone must be a string'),
-    body("phone")
-      .isLength({ min: 10, max: 11 })
-      .withMessage(
-        "Phone must be at least 6 characters long and not more than 11"
-      ),
+    // body("phone")
+    //   .isLength({ min: 10, max: 11 })
+    //   .withMessage(
+    //     "Phone must be at least 6 characters long and not more than 11"
+    //   ),
   ];
 };
 
@@ -36,9 +36,9 @@ const validate = (req: Request, res: Response, next: NextFunction) => {
     }));
 
   return res.status(422).json({
-    status: "Bad request",
-    message: "Registration unsuccessful",
-    statusCode: 400,
+    // status: "Bad request",
+    // message: "Registration unsuccessful",
+    // statusCode: 422,
     errors: extractedErrors,
   });
 };

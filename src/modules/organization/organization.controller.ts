@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction, response } from "express";
 import { CreateOrgInput } from "./organization.dto";
 import { OrganizationService } from "./organization.service";
-
-const orgService = new OrganizationService();
+import { validate as uuidValidate } from "uuid";
 const pool = require("../../common/database/db");
 const queries = require("./organization.queries");
+const orgService = new OrganizationService();
 
 export const createOrg = async (
   req: Request,
@@ -14,6 +14,17 @@ export const createOrg = async (
   try {
     const user = req.user;
     const orgData: CreateOrgInput = req.body;
+
+    if (!orgData.name) {
+      return res.status(400).json({
+        errors: [
+          {
+            field: "name",
+            message: "name is a required field",
+          },
+        ],
+      });
+    }
 
     const newOrg = await orgService.createOrganization(orgData, user.userId);
 
@@ -52,6 +63,7 @@ export const getUserOrganizations = async (
       })) as any;
       console.log(results);
       return res.status(200).json({
+        status: "success",
         message: "User's organisations returned successfully",
         data: {
           organisations: results.rows.map((row: any) => ({
@@ -135,27 +147,53 @@ export const addUserToOrganization = async (
   next: NextFunction
 ) => {
   const loggedInUserId = req.user.userId;
-  const { orgId } = req.params;
+  const orgId = req.params.orgId;
   const { userId } = req.body;
 
   try {
+    if (!userId) {
+      return res.status(400).json({
+        errors: [
+          {
+            field: "userId",
+            message: "User id is a required field",
+          },
+        ],
+      });
+    }
+    console.log("OrgId", uuidValidate(orgId));
+    // Convert orgId to a number before checking
+    if (uuidValidate(orgId) === false) {
+      return res.status(400).json({
+        errors: [
+          {
+            field: "orgId",
+            message: "Org id must be valid and provided",
+          },
+        ],
+      });
+    }
     const organizationResult = await queryDatabase(
       queries.getOrganizationById,
       [orgId, loggedInUserId]
     );
 
     if (organizationResult.rows.length === 0) {
-      return res
-        .status(404)
-        .json({
-          message: "Organisation not found or you don't have access to it",
-        });
+      return res.status(404).json({
+        status: "Not Found",
+        statusCode: 404,
+        message: "Organisation not found or you don't have access to it",
+      });
     }
 
     const userResult = await queryDatabase(queries.getUserById, [userId]);
 
     if (userResult.rows.length === 0) {
-      return res.status(400).json({ message: "This user does not exist" });
+      return res.status(400).json({
+        status: "Bad Request",
+        statusCode: 400,
+        message: "This user does not exist",
+      });
     }
 
     const userInOrgResult = await queryDatabase(
@@ -164,30 +202,26 @@ export const addUserToOrganization = async (
     );
 
     if (userInOrgResult.rows.length > 0) {
-      return res
-        .status(400)
-        .json({
-          message: "This user is already a member of this organisation",
-        });
+      return res.status(400).json({
+        status: "Bad Request",
+        statusCode: 400,
+        message: "This user is already a member of this organisation",
+      });
     }
 
     await orgService.addUserToOrganization(orgId, userId);
 
-    return res
-      .status(200)
-      .json({
-        status: "success",
-        message: "User added to organisation successfully",
-        // data: organizationResult.rows[0],
-      });
+    return res.status(200).json({
+      status: "success",
+      message: "User added to organisation successfully",
+      // data: organizationResult.rows[0],
+    });
   } catch (error) {
     console.error("Error adding user to organization:", error);
-    return res
-      .status(500)
-      .json({
-        message: "An error occurred while adding the user to the organisation.",
-        error: error,
-      });
+    return res.status(500).json({
+      message: "An error occurred while adding the user to the organisation.",
+      error: error,
+    });
   }
 };
 

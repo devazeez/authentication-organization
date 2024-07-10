@@ -8,7 +8,7 @@ import {
 import { CreateUserInput, UserLoginInput } from "./users.dto";
 import { UserService } from "./users.service";
 import { AuthService } from "../authentication/auth.service";
-
+import validate = require('uuid-validate');
 const authService = new AuthService();
 const userService = new UserService();
 const pool = require("../../common/database/db");
@@ -35,18 +35,35 @@ export const getUsersById = (
   try {
     if (!id) {
       return res.status(400).json({
-        message: "Pass in a valid id",
+        status: "Bad Request",
+        message: "User Id cannot be empty",
+        statusCode: 400,
       });
     }
+    // if (!uuidValidate(id)) {
+    //   return res.status(400).json({
+    //     status: "Bad Request",
+    //     message: "Invalid UUID format for id",
+    //     statusCode: 400,
+    //   });
+    // }
+
     pool.query(
       queries.getUserById,
       [id, userId],
       (error: any, results: any) => {
         if (error) throw error;
-        console.log(results.rows);
-        const { date_created, date_deleted, password, salt, ...restOfData } =
-          results.rows[0];
+        if (results.rows.length === 0) {
+          return res.status(404).json({
+            status: "Not Found",
+            message: "User not found",
+            statusCode: 404,
+          });
+        }
+        const userData = results.rows[0];
+        const { date_created, date_deleted, password, salt, ...restOfData } = userData;
         return res.status(200).json({
+          status: "success",
           message: "User returned successfully",
           data: {
             userId: restOfData.user_id,
@@ -70,7 +87,7 @@ export const addUser = (req: Request, res: Response, next: NextFunction) => {
   const { firstname, lastname, email, password, phone } = req.body;
   pool.query(queries.checkEmailExists, [email], (error: any, results: any) => {
     if (results.rows.length) {
-      return res.status(400).json({
+      return res.status(422).json({
         message: "Email already exists",
       });
     }
@@ -81,6 +98,7 @@ export const addUser = (req: Request, res: Response, next: NextFunction) => {
       (error: any, results: any) => {
         if (error) throw error;
         return res.status(201).json({
+          success: "success",
           message: "User Created successfully",
           data: req.body,
         });
@@ -100,7 +118,15 @@ export const signUp = async (
     const emailExists = await userService.checkEmailExists(userData.email);
     if (emailExists) {
       return res.status(400).json({
-        message: "Email already exists",
+        status: "Bad Request",
+        message: "Registration unsuccessful",
+        statusCode: 400,
+        // errors: [
+        //   {
+        //     field: "email",
+        //     message: "email already exists",
+        //   },
+        // ],
       });
     }
 
@@ -143,7 +169,7 @@ export const userLogin = async (
     });
 
     if (!results.rows.length) {
-      return res.status(400).json({
+      return res.status(401).json({
         status: "Bad request",
         message: "Authentication failed",
         statusCode: 401,

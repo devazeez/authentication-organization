@@ -3,7 +3,7 @@ import {
   createOrg,
   getUserOrganizations,
   getOrganizationById,
-  addUserToOrganization
+  addUserToOrganization,
 } from "./organization.controller";
 import { authenticate } from "../../middlewares";
 
@@ -14,6 +14,6 @@ router.use(authenticate);
 router.post("/organisations", createOrg);
 router.get("/organisations", getUserOrganizations);
 router.get("/organisations/:orgId", getOrganizationById);
-router.post("/organisations/:orgId/users", addUserToOrganization)
+router.post("/organisations/:orgId/users", addUserToOrganization);
 
 export { router as OrganizationRoute };

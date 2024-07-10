@@ -49,7 +49,7 @@ export class UserService {
       firstName: newUser.first_name,
       lastName: newUser.last_name,
       email: newUser.email,
-      phone: newUser.phone,
+      phone: newUser.phone || ""
       //   dateCreated: newUser.date_created,
     };
   }
